@@ -1,0 +1,57 @@
+﻿@page "/"
+@code {
+    PersonModel data = new();
+    List<PersonModel> ListOfPersons = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+    bool isLoading = false;
+    async void OnSubmit()
+    {
+        isLoading = true;
+        var result = await db.AddRecords(data);
+        data = new();
+        await LoadData();
+        isLoading = false;
+        await InvokeAsync(StateHasChanged);
+    }
+    public async Task LoadData()
+    {
+        ListOfPersons = await db.GetRecords();
+    }
+}
+<PageTitle>Index</PageTitle>
+
+<EditForm OnValidSubmit="OnSubmit" Model="data">
+    <InputText @bind-Value="@data.FirstName" class="form-form-control mb-3"/>
+    <InputText @bind-Value="@data.LastName" class="form-form-control mb-3"/>
+    <button type="submit">Save</button>
+</EditForm>
+@if (!isLoading)
+{
+    <table class="table table-table-bordered">
+        <thead>
+            <tr>
+                <th>FirstName</th>
+                <th>LastName</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var i in ListOfPersons)
+            {
+                <tr>
+                    <td>@i.FirstName</td>
+                    <td>@i.LastName</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+else
+{
+    <p>Loading records...</p>
+
+}
