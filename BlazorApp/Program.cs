@@ -12,7 +12,8 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 builder.Services.AddRefitClient<IDataAccess>().ConfigureHttpClient(c =>
 {
-    c.BaseAddress = new Uri("http://localhost:7071/api");
+    //c.BaseAddress = new Uri("http://localhost:7071/api");
+    c.BaseAddress = new Uri("https://blazormongodbapi.azurewebsites.net/api");
 });
 
 await builder.Build().RunAsync();
